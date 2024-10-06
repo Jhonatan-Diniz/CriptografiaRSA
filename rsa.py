@@ -2,7 +2,7 @@ import random
 import math
 
 
-# encontra o maximo divisor comum entre dois números
+# Encontra o maximo divisor comum entre dois números
 def mdc(a: int, b: int) -> int:
     resto: int = 0
     while True:
@@ -14,9 +14,7 @@ def mdc(a: int, b: int) -> int:
     return b
 
 
-# Escolhendo dois numeros primos
-
-# checa se um numero é primo
+# Checa se um número é primo
 def e_primo(num) -> bool:
     if (num == 1 or num % 2 == 0):
         return False
@@ -27,7 +25,7 @@ def e_primo(num) -> bool:
     return True
 
 
-# gera um numero aleatorio ate que seja primo
+# Gera um número aleatório ate que seja primo
 def gerando_primos(minimo: int, maximo: int) -> int:
     primo = random.randint(minimo, maximo)
     # checa se um numero é primo se não for gera outro número e retorna à
@@ -56,6 +54,7 @@ def gerando_chaves() -> tuple:
     # 1 < e < tot e mdc(e, tot) = 1
 
     e: int = random.randint(2, tot-1)
+    # checa se o mdc entre o totiente e o valor de e são co-primos
     while mdc(tot, e) != 1:
         e = random.randint(2, tot-1)
 
@@ -75,16 +74,20 @@ while True:
     print("\nG -> Gerar chaves\nC -> Criptografia\nD -> Descriptografia\nS -> Sair")
 
     opt: str = input("> ").upper()
+
     while opt not in "GCD":
         print("Digite um valor válido")
         print("\nG -> Gerar chaves\nC -> Criptografia\nD -> Descriptografia\nS -> Sair")
         opt = input("> ").upper()
 
+    # Opção de gerar cheves
     if (opt == 'G'):
         chave_publica, chave_privada = gerando_chaves()
 
         print(f"Chave pública: {chave_publica}")
         print(f"Chabe privada: {chave_privada}")
+
+    # Opção de criptografar mensagem
     elif (opt == 'C'):
         message: str = input("Mensagem: ")
         chave = input("Chave Pública -> ").split(" ")
@@ -98,6 +101,8 @@ while True:
             criptography += c + ' '
 
         print(f"Texto criptografado: {criptography}")
+
+    # Opção de Descriptografar mensagem
     elif (opt == 'D'):
         message: str = input("Mensagem: ")
         chave = input("Chave Privada: ").split(" ")
@@ -111,6 +116,8 @@ while True:
             descriptography += decode
 
         print(descriptography)
+
+    # Sair do programa
     elif (opt == 'S'):
         print("Saindo...")
         break
