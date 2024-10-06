@@ -62,9 +62,7 @@ def gerando_chaves() -> tuple:
     # 'd' precisa ser um valor que torne | d*e mod tot = 1 | verdadeiro
 
     d: int = 1
-    while (True):
-        if ((e * d) % tot == 1 and d != e):
-            break
+    while ((e*d) % tot != 1 or d == e):
         d += 1
 
     return (e, n), (d, n)
@@ -75,7 +73,7 @@ while True:
 
     opt: str = input("> ").upper()
 
-    while opt not in "GCD":
+    while opt not in "GCDS":
         print("Digite um valor válido")
         print("\nG -> Gerar chaves\nC -> Criptografia\nD -> Descriptografia\nS -> Sair")
         opt = input("> ").upper()
@@ -84,12 +82,12 @@ while True:
     if (opt == 'G'):
         chave_publica, chave_privada = gerando_chaves()
 
-        print(f"Chave pública: {chave_publica}")
-        print(f"Chabe privada: {chave_privada}")
+        print(f"Chave pública:\n {chave_publica[0]} {chave_publica[1]}\n")
+        print(f"Chabe privada:\n {chave_privada[0]} {chave_privada[1]}\n")
 
     # Opção de criptografar mensagem
     elif (opt == 'C'):
-        message: str = input("Mensagem: ")
+        message: str | list = input("Mensagem: ")
         chave = input("Chave Pública -> ").split(" ")
         e, n = int(chave[0]), int(chave[1])
 
@@ -100,22 +98,22 @@ while True:
             c: str = str(pow(encode, e, n))
             criptography += c + ' '
 
-        print(f"Texto criptografado: {criptography}")
+        print(f"Texto criptografado:\n{criptography}\n")
 
     # Opção de Descriptografar mensagem
     elif (opt == 'D'):
-        message: str = input("Mensagem: ")
+        message: str | list = input("Mensagem: ").split(' ')
         chave = input("Chave Privada: ").split(" ")
         d, n = int(chave[0]), int(chave[1])
 
-        descriptography: str = ''
+        descriptografado: str = ''
 
         for char in message:
-            d = pow(int(char), d, n)
-            decode = chr(d)
-            descriptography += decode
+            ch = pow(int(char), d, n)
+            decode = chr(ch)
+            descriptografado += decode
 
-        print(descriptography)
+        print(f"Texto descriptografado:\n{descriptografado}\n")
 
     # Sair do programa
     elif (opt == 'S'):
