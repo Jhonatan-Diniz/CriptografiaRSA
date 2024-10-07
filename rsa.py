@@ -2,16 +2,17 @@ import random
 import math
 
 
-# Encontra o maximo divisor comum entre dois números
-def mdc(a: int, b: int) -> int:
-    resto: int = 0
-    while True:
-        resto = a % b
-        if (resto == 0):
-            break
-        a = b
-        b = resto
-    return b
+# Encontra o máximo divisor comum entre dois números usando o algoritmo
+# Euclidiano Estendido
+def emdc(a: int, b: int) -> tuple:
+    # Quando o resto for zero o código volta
+    if a == 0:
+        return (b, 0, 1)
+
+    # Usando a recursividade para descobrir o mdc e os coeficientes de a e b
+    m, y, x = emdc(b % a, a)
+    # Retorna o mdc, o coeficiente de a e o coeficiente de b
+    return (m, x - (b//a) * y, y)
 
 
 # Checa se um número é primo
@@ -19,10 +20,25 @@ def e_primo(num) -> bool:
     if (num == 1 or num % 2 == 0):
         return False
 
+    # Percorre todos os números ímpares até a raiz de num, se houve algum
+    # divisor então num não é primo
     for i in range(3, math.floor(math.sqrt(num)) + 1, 2):
         if (num % i == 0):
             return False
     return True
+
+
+# Define o módulo multiplicativo
+def modInverso(a, b) -> int:
+    # Pegando o mdc e os coeficientes de a e b, porém o coeficiente y não é
+    # importante
+    mdc, x, _ = emdc(a, b)
+    if mdc != 1:
+        print("Não há modulo!")
+        return 0
+
+    # Retorna o módulo do coeficiente de a por b
+    return x % b
 
 
 # Gera um número aleatório ate que seja primo
@@ -51,20 +67,20 @@ def gerando_chaves() -> tuple:
     tot: int = (p-1)*(q-1)
 
     # escolhendo um numero 'e' que representa a primeira parte da public key |
-    # 1 < e < tot e mdc(e, tot) = 1
+    # 1 < e < tot e emdc(e, tot) = 1
 
     e: int = random.randint(2, tot-1)
-    # checa se o mdc entre o totiente e o valor de e são co-primos
-    while mdc(tot, e) != 1:
+    # checa se o emdc entre o totiente e o valor de e são co-primos
+    while emdc(tot, e)[0] != 1:
         e = random.randint(2, tot-1)
 
     # encontrando o numero 'd' que representa a primeira parte da private key |
     # 'd' precisa ser um valor que torne | d*e mod tot = 1 | verdadeiro
 
-    d: int = 1
-    while ((e*d) % tot != 1 or d == e):
-        d += 1
+    # Módulo inverso de e por tot
+    d: int = modInverso(e, tot)
 
+    # Retorna os valores das chaves públicas e privadas
     return (e, n), (d, n)
 
 
