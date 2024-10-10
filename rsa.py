@@ -28,7 +28,7 @@ def e_primo(num) -> bool:
     return True
 
 
-# Define o módulo multiplicativo
+# Define o módulo multiplicativo inverso
 def modInverso(a, b) -> int:
     # Pegando o mdc e os coeficientes de a e b, porém o coeficiente y não é
     # importante
@@ -84,54 +84,82 @@ def gerando_chaves() -> tuple:
     return (e, n), (d, n)
 
 
+def gerar_chaves():
+    chave_publica, chave_privada = gerando_chaves()
+
+    print(f"Chave pública:\n {chave_publica[0]} {chave_publica[1]}\n")
+    print(f"Chabe privada:\n {chave_privada[0]} {chave_privada[1]}\n")
+
+
+def criptografar_mensagem():
+    print('Digite uma mensagem de até 128 caractéres')
+
+    message: str | list = input("Mensagem: ")
+    while len(message) > 128:
+        print("mensagem muito comprida. Separe em duas mensagenss")
+        message: str | list = input("Mensagem: ")
+
+    print('Digite a chave no formato xxxx xxxx')
+
+    while True:
+        chave = input("Chave Pública -> ").strip().split(" ")
+        if len(chave) == 2:
+            break
+        print('Digitou errado. Tente novamente no formato xxxx xxxx')
+
+    e, n = int(chave[0]), int(chave[1])
+
+    criptography: str = ''
+
+    for char in message:
+        encode: int = ord(char)
+        c: str = str(pow(encode, e, n))
+        criptography += c + ' '
+
+    print(f"Texto criptografado:\n{criptography}\n")
+
+
+def descriptografar_mensagem():
+    message: str | list = input("Mensagem: ").split(' ')
+
+    print('Digite a chave no formato xxxx xxxx')
+    while True:
+        chave = input("Chave Privada: ").split(" ")
+        if len(chave) == 2:
+            break
+        print('Digitou errado. Tente novamente no formato xxxx xxxx')
+    d, n = int(chave[0]), int(chave[1])
+
+    descriptografado: str = ''
+
+    for char in message:
+        ch = pow(int(char), d, n)
+        decode = chr(ch)
+        descriptografado += decode
+
+    print(f"Texto descriptografado:\n{descriptografado}\n")
+
+
 while True:
     print("\nG -> Gerar chaves\nC -> Criptografia\nD -> Descriptografia\nS -> Sair")
 
-    opt: str = input("> ").upper()
+    opcao: str = input("> ").upper()
 
-    while opt not in "GCDS":
+    while opcao not in "GCDS":
         print("Digite um valor válido")
         print("\nG -> Gerar chaves\nC -> Criptografia\nD -> Descriptografia\nS -> Sair")
-        opt = input("> ").upper()
+        opcao = input("> ").upper()
 
-    # Opção de gerar cheves
-    if (opt == 'G'):
-        chave_publica, chave_privada = gerando_chaves()
+    if (opcao == 'G'):
+        gerar_chaves()
 
-        print(f"Chave pública:\n {chave_publica[0]} {chave_publica[1]}\n")
-        print(f"Chabe privada:\n {chave_privada[0]} {chave_privada[1]}\n")
+    elif (opcao == 'C'):
+        criptografar_mensagem()
 
-    # Opção de criptografar mensagem
-    elif (opt == 'C'):
-        message: str | list = input("Mensagem: ")
-        chave = input("Chave Pública -> ").split(" ")
-        e, n = int(chave[0]), int(chave[1])
-
-        criptography: str = ''
-
-        for char in message:
-            encode: int = ord(char)
-            c: str = str(pow(encode, e, n))
-            criptography += c + ' '
-
-        print(f"Texto criptografado:\n{criptography}\n")
-
-    # Opção de Descriptografar mensagem
-    elif (opt == 'D'):
-        message: str | list = input("Mensagem: ").split(' ')
-        chave = input("Chave Privada: ").split(" ")
-        d, n = int(chave[0]), int(chave[1])
-
-        descriptografado: str = ''
-
-        for char in message:
-            ch = pow(int(char), d, n)
-            decode = chr(ch)
-            descriptografado += decode
-
-        print(f"Texto descriptografado:\n{descriptografado}\n")
+    elif (opcao == 'D'):
+        descriptografar_mensagem()
 
     # Sair do programa
-    elif (opt == 'S'):
+    elif (opcao == 'S'):
         print("Saindo...")
         break
