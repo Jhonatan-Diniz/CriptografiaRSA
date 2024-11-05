@@ -91,75 +91,27 @@ def gerar_chaves():
     print(f"Chabe privada:\n {chave_privada[0]} {chave_privada[1]}\n")
 
 
-def criptografar_mensagem():
-    print('Digite uma mensagem de até 128 caractéres')
-
-    message: str | list = input("Mensagem: ")
-    while len(message) > 128:
-        print("mensagem muito comprida. Separe em duas mensagenss")
-        message: str | list = input("Mensagem: ")
-
-    print('Digite a chave no formato xxxx xxxx')
-
-    while True:
-        chave = input("Chave Pública -> ").strip().split(" ")
-        if len(chave) == 2:
-            break
-        print('Digitou errado. Tente novamente no formato xxxx xxxx')
-
+def criptografar_mensagem(msg, chave):
     e, n = int(chave[0]), int(chave[1])
 
     criptography: str = ''
 
-    for char in message:
+    for char in msg:
         encode: int = ord(char)
         c: str = str(pow(encode, e, n))
         criptography += c + ' '
 
-    print(f"Texto criptografado:\n{criptography}\n")
+    return criptography
 
 
-def descriptografar_mensagem():
-    message: str | list = input("Mensagem: ").split(' ')
-
-    print('Digite a chave no formato xxxx xxxx')
-    while True:
-        chave = input("Chave Privada: ").split(" ")
-        if len(chave) == 2:
-            break
-        print('Digitou errado. Tente novamente no formato xxxx xxxx')
+def descriptografar_mensagem(msg, chave):
     d, n = int(chave[0]), int(chave[1])
 
     descriptografado: str = ''
 
-    for char in message:
+    for char in msg.split():
         ch = pow(int(char), d, n)
         decode = chr(ch)
         descriptografado += decode
 
-    print(f"Texto descriptografado:\n{descriptografado}\n")
-
-
-while True:
-    print("\nG -> Gerar chaves\nC -> Criptografia\nD -> Descriptografia\nS -> Sair")
-
-    opcao: str = input("> ").upper()
-
-    while opcao not in "GCDS":
-        print("Digite um valor válido")
-        print("\nG -> Gerar chaves\nC -> Criptografia\nD -> Descriptografia\nS -> Sair")
-        opcao = input("> ").upper()
-
-    if (opcao == 'G'):
-        gerar_chaves()
-
-    elif (opcao == 'C'):
-        criptografar_mensagem()
-
-    elif (opcao == 'D'):
-        descriptografar_mensagem()
-
-    # Sair do programa
-    elif (opcao == 'S'):
-        print("Saindo...")
-        break
+    return descriptografado
